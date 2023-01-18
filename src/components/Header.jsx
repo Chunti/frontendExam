@@ -13,14 +13,19 @@ function Header({setErrorMsg, user, setUser}) {
         <nav className="topnav">
             <NavLink className="active" to="/"><i className="fa fa-fw fa-home"></i> Home</NavLink>
             <NavLink to="/search"><i className="fa fa-fw fa-search"></i> Search</NavLink>
-        
-            {/* But when you deploy then navlinks above will be - > */}
-            {/* <NavLink className="active" to="{DROPLET_FOLDER}"><i className="fa fa-fw fa-home"></i> Home</NavLink>
-                <NavLink to={DROPLET_FOLDER + "/search"}><i className="fa fa-fw fa-search"></i> Search</NavLink> */}
+            <NavLink to="/deployTest"><i className="fa fa-fw fa-envelope"/> Deploy</NavLink>
+            {user.roles.includes("user") ? 
+                <NavLink to="/matches"><i className="fa fa-fw fa-envelope"/> Matches </NavLink> : null}
 
-            <NavLink to="/jokes"><i className="fa fa-fw fa-envelope"></i> Jokes</NavLink>
+            {user.roles.includes("player") ? 
+                <NavLink to="/yourmatches"><i className="fa fa-fw fa-envelope"/> Your Matches </NavLink> : null}
+
             {user.roles.includes("admin") ? 
-                <NavLink to="/crud"><i className="fa fa-fw fa-envelope"/> CRUD </NavLink> : null}
+                <NavLink to="/crud"><i className="fa fa-fw fa-envelope"/> Create Match </NavLink> : null}
+            {user.roles.includes("admin") ? 
+                <NavLink to="/createplayer"><i className="fa fa-fw fa-envelope"/> Create Player </NavLink> : null}
+                {user.roles.includes("admin") ? 
+                <NavLink to="/createlocation"><i className="fa fa-fw fa-envelope"/> Create Location </NavLink> : null}
 
             {!getToken() ? //hvis man ikke er logget ind, så skal den i login komponent ellers ned i LoggedIn
                 <Login setUser={setUser} setErrorMsg={setErrorMsg}/> :

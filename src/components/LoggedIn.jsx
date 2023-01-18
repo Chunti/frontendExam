@@ -11,13 +11,13 @@ export default function LoggedIn({user,setUser}) {
     }
 
     return (            
-    
         <div className="login-container">
-            {user.isLoggedIn && <span>Hi, {user["username"]}! {user["roles"].includes("admin") && //replaced
-            <span className="badge bg-dark">Admin</span>}</span>} 
+            {user.isLoggedIn && <span>Hi, {user["email"]}! 
+            {user["roles"].includes("admin") && <span className="badge bg-dark">Admin</span>}
+            {user["roles"].includes("player") && <span className="badge bg-dark">Player</span>}
+            {user["roles"].includes("user") && <span className="badge bg-dark">User</span>}
+            </span>} 
             <button onClick={logout}>Logout</button>
-            {/* But when you deploy then the button above - >
-            <Link to={DROPLET_FOLDER} onClick={logout}>Logout</Link>. You can make it into a button inside Link i guess but dont know how */}
         </div>
     )
 

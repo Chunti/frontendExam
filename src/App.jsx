@@ -6,7 +6,12 @@ import Contact from "./pages/Contact.jsx";
 import LandingPage from "./pages/LandingPage.jsx";
 import CRUD from "./pages/CRUD";
 import Header from "./components/Header.jsx";
-import Jokes from "./components/Jokes.jsx";
+import DeployPage from "./components/Deploy.jsx";
+import Matches from "./components/Matches.jsx";
+import PlayerMatches from "./components/PlayerMatches.jsx";
+import CreatePlayer from "./pages/CreatePlayer";
+import CreateLocation from "./pages/CreateLocation";
+
 import { useEffect } from "react";
 import {
   getToken,
@@ -17,7 +22,7 @@ import {
 } from "./utils/apiFacade";
 
 export const initialState = {
-  username: null,
+  email: null,
   roles: [],
   isLoggedIn: false,
 };
@@ -25,11 +30,28 @@ export const initialState = {
 export function updateUser(token, setUser) {
   const payload = decodeToken(token); //console.log(payload);
   setUser({
-    username: payload["sub"],
+    email: payload["email"],
     roles: payload["roles"],
     isLoggedIn: true,
   });
 }
+
+export function jsonToSession(json, setSession) {
+  const payload = decodeToken(json.token); //console.log(payload);
+  const user = json.user; console.log(user);
+  setSession({
+    user: {
+      id: user.id,
+      name: user.name,
+      phone: user.phone,
+      role: user.role,
+      isLoggedIn: true,
+    },
+    expires: payload["exp"],
+  });
+}
+
+
 
 function App(props) {
   const [user, setUser] = useState(initialState);
@@ -74,32 +96,35 @@ function App(props) {
        
         {!getToken() ? (
           <>
-           {/* Add only Routes where you dont have to be logged ind to access */}
           <Route path="/" element={<LandingPage user={user} />} /> 
-          {/* But when you are going to deploy it then your path={DROPLET_FOLDER}, hopefully it works correctly */}
-          
           </>
         ) : 
-        
         ( 
         <>
-           {/* You have to be logged in as user or admin to see added routes down below  */}
           <Route path="/" element={<Home user={user} />} />
-
-          {/* You have to be logged in as  admin to see added routes down below  */}
           {user.roles.includes("admin") && 
             <Route path="/crud" element={<CRUD />} />
-            //  Add routes only admin can access 
-          
+          }
+          {user.roles.includes("admin") && 
+            <Route path="/createplayer" element={<CreatePlayer />} /> 
+          }
+          {user.roles.includes("admin") && 
+            <Route path="/createlocation" element={<CreateLocation />} />
+          }
+
+
+            
+          {user.roles.includes("user") && 
+            <Route path="/matches" element={<Matches />} />
+          }
+          {user.roles.includes("player") && 
+            <Route path="/yourmatches" element={<PlayerMatches />} />
           }
         </>
         )}
-
-        {/* Does not matter if logged ind. You can always see these paths down below*/}
         <Route path="/search" element={<Search />} />
-         {/* But when you are going to deploy it then your path={DROPLET_FOLDER + /search} path above, hopefully it works correctly */}
+        <Route path="/deployTest" element={<DeployPage/>} />
         <Route path="/contact" element={<Contact address={obj} />} />
-        <Route path="/jokes" element={<Jokes />} />
         
         <Route path="*" element={<h1>Page Not Found !!!!</h1>} />
       </Routes>

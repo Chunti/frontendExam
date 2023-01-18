@@ -23,7 +23,7 @@ function apiFacade() {
 
     const verifyToken = async () => {
         const options = makeOptions("GET", true);
-        const response = await fetch(VERIFY_URL, options);
+        const response = await fetch('/backendExam/api/verify', options);
         try {
             const token = (await (await handleHttpErrors(response)).json())["token"];
             setToken(token);
@@ -44,9 +44,9 @@ function apiFacade() {
         localStorage.removeItem("jwtToken");
     }
 
-    const logIn = async (user, password) => {
-        const options = makeOptions("POST", false, {username: user, password: password});
-        const response = await fetch(LOGIN_URL, options);
+    const logIn = async (email, password) => {
+        const options = makeOptions("POST", false, {email: email, password: password});
+        const response = await fetch('/backendExam/api/login', options);
         try {
             const token = (await (await handleHttpErrors(response)).json())["token"];
             setToken(token);
@@ -70,7 +70,7 @@ function apiFacade() {
 
     const fetchData = () => {
         const options = makeOptions("GET", true);
-        return fetch(URL + "api/info/user", options).then(handleHttpErrors);
+        return fetch("/backendExam/api/info/user", options).then(handleHttpErrors);
     }
 
     function makeOptions(method, addToken, body) {
